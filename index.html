@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Armazém de Fotos</title>
+    <style>
+        /* Variáveis de Cores e Estilos Básicos */
+        :root {
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Cabeçalho */
+        header {
+            background-color: var(--card-bg);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        /* Container Principal */
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Área de Upload */
+        .upload-section {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px dashed #cbd5e1;
+            margin-bottom: 30px;
+            transition: border-color 0.3s;
+        }
+
+        .upload-section:hover {
+            border-color: var(--primary-color);
+        }
+
+        .upload-section input[type="file"] {
+            display: none;
+        }
+
+        .upload-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .upload-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .upload-section p {
+            color: #64748b;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Grid da Galeria */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /* Estilo de cada Foto */
+        .photo-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-info {
+            padding: 12px;
+            font-size: 0.9rem;
+            text-align: center;
+            color: #475569;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📸 Meu Armazém de Fotos</h1>
+    </header>
+
+    <main>
+        <!-- Área para enviar novas fotos -->
+        <section class="upload-section">
+            <label for="file-upload" class="upload-btn">
+                + Adicionar Fotos
+            </label>
+            <input type="file" id="file-upload" accept="image/*" multiple>
+            <p>Selecione uma ou mais imagens do seu dispositivo</p>
+        </section>
+
+        <!-- Galeria onde as fotos vão aparecer -->
+        <section class="gallery" id="gallery">
+            <!-- Fotos de exemplo -->
+            <div class="photo-card">
+                <img src="https://images.unsplash.com/photo-1506744626753-eda818361662?w=500&q=80" alt="Exemplo Natureza">
+                <div class="photo-info">Montanhas.jpg</div>
+            </div>
+            <div class="photo-card">
+                <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=500&q=80" alt="Exemplo Paisagem">
+                <div class="photo-info">Vale.jpg</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Lógica em JavaScript -->
+    <script>
+        const fileInput = document.getElementById('file-upload');
+        const gallery = document.getElementById('gallery');
+
+        // Função que é ativada quando o usuário escolhe fotos
+        fileInput.addEventListener('change', function(event) {
+            const files = event.target.files;
+
+            if (files.length === 0) return;
+
+            // Percorre cada arquivo selecionado
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                // Verifica se é realmente uma imagem
+                if (!file.type.startsWith('image/')) continue;
+
+                // Cria um URL temporário para visualizar a imagem localmente
+                const imageUrl = URL.createObjectURL(file);
+
+                // Cria os elementos HTML para a nova foto
+                const card = document.createElement('div');
+                card.classList.add('photo-card');
+
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.alt = file.name;
+
+                const info = document.createElement('div');
+                info.classList.add('photo-info');
+                info.textContent = file.name; // Mostra o nome do arquivo
+
+                // Monta o card e adiciona na galeria
+                card.appendChild(img);
+                card.appendChild(info);
+                gallery.prepend(card); // 'prepend' coloca as novas fotos no início
+            }
+
+            // Limpa o input para permitir enviar as mesmas fotos de novo, se necessário
+            fileInput.value = '';
+        });
+    </script>
+</body>
+</html>
